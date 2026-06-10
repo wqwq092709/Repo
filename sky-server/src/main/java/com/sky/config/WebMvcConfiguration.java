@@ -12,6 +12,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -42,27 +43,31 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @return
      */
     @Bean
-    public Docket docket() {
-        ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("苍穹外卖项目接口文档")
-                .version("2.0")
-                .description("苍穹外卖项目接口文档")
-                .build();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo)
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.controller"))
+                // 修改为你的 Controller 所在包路径
+                .apis(RequestHandlerSelectors.basePackage("com.sky.controller.admin"))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
 
-    /**
-     * 设置静态资源映射
-     * @param registry
-     */
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("项目 API 文档")
+                .description("Knife4j 生成的接口文档")
+                .version("1.0")
+                .contact(new Contact("开发者", "https://example.com", "dev@example.com"))
+                .build();
+    }
+    @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        // Knife4j 文档页面
+        registry.addResourceHandler("/doc.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        // Swagger 静态资源
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }

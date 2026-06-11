@@ -1,10 +1,13 @@
 package com.sky.config;
 
 import com.sky.interceptor.JwtTokenAdminInterceptor;
+import com.sky.json.JacksonConverterConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -15,6 +18,9 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * 配置类，注册web层相关组件
@@ -69,5 +75,22 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         // Swagger 静态资源
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    @Override
+    protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 1. 添加字符串转换器（支持中文）
+        StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
+        converters.add(stringConverter);
+
+        // 2. 添加 Jackson JSON 转换器（使用独立的配置类）
+        converters.add(0,JacksonConverterConfig.createJacksonConverter());
+
+        // 3. 添加自定义转换器（如果需要）
+        // converters.add(new CustomMessageConverter());
+
+        // 4. 调用父类方法添加剩余的默认转换器
+        // 注意：这个调用会添加 Spring 默认的其他转换器（如字节数组、资源等）
+        super.addDefaultHttpMessageConverters(converters);
     }
 }

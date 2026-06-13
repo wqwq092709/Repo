@@ -53,7 +53,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                // 修改为你的 Controller 所在包路径
+                //Controller 所在包路径
                 .apis(RequestHandlerSelectors.basePackage("com.sky.controller.admin"))
                 .paths(PathSelectors.any())
                 .build();

@@ -7,7 +7,10 @@ import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
+import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +28,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private DishMapper dishMapper;
+
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     /**
      * 分页查询分类商品
@@ -57,7 +66,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void update(CategoryDTO categoryDTO) {
-        categoryMapper.update(categoryDTO);
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryDTO,category);
+
+        category.setUpdateTime(LocalDateTime.now());
+        category.setUpdateUser(BaseContext.getCurrentId());
+        categoryMapper.update(category);
     }
 
     @Override
@@ -68,10 +82,27 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setStatus(StatusConstant.DISABLE);
         category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
         category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
-
         categoryMapper.save(category);
+    }
+
+    @Override
+    public void deleteById(long id) {
+
+        //检查当前分类是否关联了菜品
+        Integer dishCount = dishMapper.countByCategoryId(id);
+        if(dishCount >0){
+            throw new DeletionNotAllowedException("当前有菜品，不能被删除");
+        }
+
+        //检查当前分类是否关联了套餐
+        Integer setmealCount = setmealMapper.countByCategoryId(id);
+        if(setmealCount >0){
+            throw new DeletionNotAllowedException("当前有套餐，不能被删除");
+        }
+
+        //删除分类
+        categoryMapper.deleteById(id);
+
     }
 }

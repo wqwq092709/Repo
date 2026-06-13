@@ -37,5 +37,11 @@ public interface CategoryService {
      */
     void update(CategoryDTO categoryDTO);
 
+    /**
+     * 添加分类
+     * @param categoryDTO
+     */
     void save(CategoryDTO categoryDTO);
+
+    void deleteById(long id);
 }

@@ -29,6 +29,8 @@
             <if test="sort != null">
                 sort = #{sort},
             </if>
+            update_time = #{updateTime},
+            update_user = #{updateUser},
         </set>
         where id = #{id}
     </update>

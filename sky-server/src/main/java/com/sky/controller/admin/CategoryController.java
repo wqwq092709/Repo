@@ -7,7 +7,9 @@ import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "分类管理")
@@ -43,6 +45,12 @@ public class CategoryController {
     @PostMapping
     public Result save(@RequestBody CategoryDTO categoryDTO){
         categoryService.save(categoryDTO);
+        return Result.success();
+    }
+
+    @DeleteMapping
+    public Result deleteById(long id) {
+        categoryService.deleteById(id);
         return Result.success();
     }
 }

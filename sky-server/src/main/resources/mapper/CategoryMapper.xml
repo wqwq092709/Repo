@@ -15,6 +15,7 @@
                 and type = #{type}
             </if>
         </where>
+        order by sort desc
     </select>
 
     <!--更新分类-->

@@ -36,4 +36,6 @@ public interface CategoryService {
      * @param categoryDTO
      */
     void update(CategoryDTO categoryDTO);
+
+    void save(CategoryDTO categoryDTO);
 }

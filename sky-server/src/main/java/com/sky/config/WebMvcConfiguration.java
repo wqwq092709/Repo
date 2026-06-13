@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -31,6 +32,16 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+
+    /**
+     * 配置路径匹配策略为 ant_path_matcher，兼容 Knife4j/Springfox
+     */
+    @Override
+    protected void configurePathMatch(PathMatchConfigurer configurer) {
+        // 使用 ant_path_matcher 而非默认的 path_pattern_parser
+        // 以兼容 Knife4j（内置 Springfox 3.0.0）
+        configurer.setPatternParser(null);
+    }
 
     /**
      * 注册自定义拦截器

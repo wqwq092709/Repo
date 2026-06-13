@@ -16,4 +16,19 @@
             </if>
         </where>
     </select>
+
+    <!--更新分类-->
+    <update id="update">
+        update category
+        <set>
+            <if test="name != null and name != '' ">
+                name = #{name},
+            </if>
+
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

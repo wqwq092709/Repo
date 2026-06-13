@@ -38,7 +38,12 @@ public class GlobalExceptionHandler {
         }else {
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
-
     }
+    @ExceptionHandler
+    public Result runtimeException(RuntimeException ex){
+        String message = ex.getMessage();
+        return Result.error("出错了...");
+    }
+
 
 }

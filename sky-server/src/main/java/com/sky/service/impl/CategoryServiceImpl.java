@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.mapper.CategoryMapper;
@@ -37,5 +38,21 @@ public class CategoryServiceImpl implements CategoryService {
         long total = categoryPage.getTotal();
         List<Category> result = categoryPage.getResult();
         return new PageResult(total,result);
+    }
+
+    @Override
+    public void startOrEnd(String status, String id) {
+        categoryMapper.startOrEnd(status,id);
+    }
+
+    @Override
+    public Category getById(long id) {
+        Category category = categoryMapper.getById(id);
+        return category;
+    }
+
+    @Override
+    public void update(CategoryDTO categoryDTO) {
+        categoryMapper.update(categoryDTO);
     }
 }

@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
@@ -53,52 +54,68 @@ public class CategoryServiceImpl implements CategoryService {
         return new PageResult(total,result);
     }
 
+    /**
+     * 启用或禁用分类
+     * @param status
+     * @param id
+     */
     @Override
     public void startOrEnd(String status, String id) {
         categoryMapper.startOrEnd(status,id);
     }
 
+    /**
+     * 根据id获取分类
+     * @param id
+     * @return
+     */
     @Override
     public Category getById(long id) {
         Category category = categoryMapper.getById(id);
         return category;
     }
 
+    /**
+     * 更新分类
+     * @param categoryDTO
+     */
     @Override
     public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
 
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
         categoryMapper.update(category);
     }
 
+    /**
+     * 新增分类
+     * @param categoryDTO
+     */
     @Override
     public void save(CategoryDTO categoryDTO) {
 
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-
-        category.setStatus(StatusConstant.DISABLE);
-        category.setCreateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
         categoryMapper.save(category);
     }
 
+    /**
+     * 删除分类
+     * @param id
+     */
     @Override
     public void deleteById(long id) {
 
         //检查当前分类是否关联了菜品
         Integer dishCount = dishMapper.countByCategoryId(id);
         if(dishCount >0){
-            throw new DeletionNotAllowedException("当前有菜品，不能被删除");
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }
 
         //检查当前分类是否关联了套餐
         Integer setmealCount = setmealMapper.countByCategoryId(id);
         if(setmealCount >0){
-            throw new DeletionNotAllowedException("当前有套餐，不能被删除");
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
 
         //删除分类

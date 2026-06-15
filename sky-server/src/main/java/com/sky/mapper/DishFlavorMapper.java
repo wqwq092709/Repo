@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.DishFlavor;
 
 import org.apache.ibatis.annotations.Mapper;

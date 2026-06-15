@@ -75,7 +75,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .title("项目 API 文档")
                 .description("Knife4j 生成的接口文档")
                 .version("1.0")
-                .contact(new Contact("开发者", "https://example.com", "dev@example.com"))
+                .contact(new Contact("WangQi", "https://example.com", "dev@example.com"))
                 .build();
     }
     @Override

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "分类管理")
 @RestController
 @RequestMapping("/admin/category")
@@ -41,7 +43,7 @@ public class CategoryController {
         categoryService.update(categoryDTO);
         return Result.success();
     }
-
+    @ApiOperation("新增分类")
     @PostMapping
     public Result save(@RequestBody CategoryDTO categoryDTO){
         categoryService.save(categoryDTO);
@@ -49,9 +51,22 @@ public class CategoryController {
     }
 
 
+    @ApiOperation("根据id删除分类")
     @DeleteMapping
     public Result deleteById(long id) {
         categoryService.deleteById(id);
         return Result.success();
+    }
+
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
+    @GetMapping("/list")
+    @ApiOperation("根据类型查询分类")
+    public Result<List<Category>> list(Integer type){
+        List<Category> list = categoryService.list(type);
+        return Result.success(list);
     }
 }

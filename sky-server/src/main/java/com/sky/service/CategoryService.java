@@ -5,6 +5,8 @@ import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.result.PageResult;
 
+import java.util.List;
+
 /**
  * 分类管理业务
  */
@@ -43,5 +45,17 @@ public interface CategoryService {
      */
     void save(CategoryDTO categoryDTO);
 
+    /**]
+     * 根据id删除分类
+     * @param id
+     */
     void deleteById(long id);
+
+
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
+    public List<Category> list(Integer type);
 }

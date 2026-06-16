@@ -13,6 +13,10 @@ public enum OperationType {
     /**
      * 插入操作
      */
-    INSERT
+    INSERT,
 
+    /**
+     * 启用或禁用
+     */
+    CHANGE_STATUS;
 }

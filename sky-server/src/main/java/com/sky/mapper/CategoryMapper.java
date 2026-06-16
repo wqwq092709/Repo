@@ -25,6 +25,7 @@ public interface CategoryMapper {
      * @param status
      * @param id
      */
+    @AutoFill(OperationType.CHANGE_STATUS)
     @Update("update category set status = #{status} where id = #{id}")
     void startOrEnd(Integer status, long id);
 

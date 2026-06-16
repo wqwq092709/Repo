@@ -43,6 +43,7 @@ public interface DishMapper {
      * 启用或禁用菜品
      * @param dishDTO
      */
+    @AutoFill(OperationType.CHANGE_STATUS)
     @Update("update dish set status = #{status} where id = #{id}")
     void startOrEnd(DishDTO dishDTO);
 

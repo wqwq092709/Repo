@@ -41,6 +41,7 @@ public interface EmployeeMapper {
      * 启用或禁用员工
      * @param employee
      */
+    @AutoFill(OperationType.CHANGE_STATUS)
     @Update("update employee set status=#{status} where id = #{id}")
     void startOrEnd(Employee employee);
 

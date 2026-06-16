@@ -2,10 +2,12 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.annotation.AutoFill;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.enumeration.OperationType;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
@@ -32,6 +34,7 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+
 
     @Transactional
     @Override
@@ -74,10 +77,12 @@ public class DishServiceImpl implements DishService {
         return new PageResult(total,result);
     }
 
+
     @Override
     public void startOrEnd(DishDTO dishDTO) {
         dishMapper.startOrEnd(dishDTO);
     }
+
 
     @Transactional
     @Override

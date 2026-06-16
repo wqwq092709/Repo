@@ -1,11 +1,8 @@
 package com.sky.mapper;
 
-import com.sky.dto.DishDTO;
-import com.sky.dto.DishPageQueryDTO;
-import com.sky.entity.Dish;
+import com.sky.annotation.AutoFill;
 import com.sky.entity.DishFlavor;
-
-import org.apache.ibatis.annotations.Delete;
+import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -18,6 +15,7 @@ public interface DishFlavorMapper {
      * 批量添加口味
      * @param dishFlavorList
      */
+    @AutoFill(OperationType.INSERT)
     void insertBatch(List<DishFlavor> dishFlavorList);
 
     /**
@@ -39,6 +37,7 @@ public interface DishFlavorMapper {
      * 更新菜品口味
      * @param dishFlavors
      */
+    @AutoFill(OperationType.UPDATE)
     void update(List<DishFlavor> dishFlavors);
 
 }

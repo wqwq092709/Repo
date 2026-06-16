@@ -15,7 +15,6 @@ public interface DishFlavorMapper {
      * 批量添加口味
      * @param dishFlavorList
      */
-    @AutoFill(OperationType.INSERT)
     void insertBatch(List<DishFlavor> dishFlavorList);
 
     /**
@@ -30,7 +29,6 @@ public interface DishFlavorMapper {
      * 根据菜品id批量删除口味
      * @param ids
      */
-
     void deleteByDishIds(List<Long> ids);
 
     /**

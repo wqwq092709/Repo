@@ -41,8 +41,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler
     public Result runtimeException(RuntimeException ex){
-        String message = ex.getMessage();
-        log.info("错误：{}",message);
+        ex.printStackTrace();
         return Result.error("出错了...");
     }
 

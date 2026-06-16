@@ -37,7 +37,7 @@ public interface DishMapper {
      * 分页查询菜品
      * @param dishPageQueryDTO
      */
-    Page<Dish> page(DishPageQueryDTO dishPageQueryDTO);
+    Page<DishVO> page(DishPageQueryDTO dishPageQueryDTO);
 
     /**
      * 启用或禁用菜品

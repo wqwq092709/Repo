@@ -65,12 +65,12 @@ public class DishServiceImpl implements DishService {
 
         //开启分页查询
         PageHelper.startPage(page,pageSize);
-        Page<Dish> dishPage = dishMapper.page(dishPageQueryDTO);
+        Page<DishVO> dishPage = dishMapper.page(dishPageQueryDTO);
         log.info("dishPage:{}",dishPage);
 
         long total = dishPage.getTotal();
 
-        List<Dish> result = dishPage.getResult();
+        List<DishVO> result = dishPage.getResult();
         return new PageResult(total,result);
     }
 

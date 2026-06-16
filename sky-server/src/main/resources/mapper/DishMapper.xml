@@ -45,10 +45,8 @@
     </delete>
 
     <!--分页查询菜品-->
-    <select id="page" resultType="Dish">
-        select *
-
-        from dish
+    <select id="page" resultType="dishVO">
+        select d.*,cg.name as categoryName from dish d left join category cg on d.category_id = cg.id
         <where>
             <if test="categoryId != null">
                 and category_id =#{categoryId}

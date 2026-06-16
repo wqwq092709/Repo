@@ -56,12 +56,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 启用或禁用分类
-     * @param status
-     * @param id
+     * @param category
      */
     @Override
-    public void startOrEnd(Integer status, long id) {
-        categoryMapper.startOrEnd(status,id);
+    public void startOrEnd(Category category) {
+        categoryMapper.startOrEnd(category);
     }
 
     /**

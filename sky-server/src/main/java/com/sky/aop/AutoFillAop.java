@@ -50,7 +50,7 @@ public class AutoFillAop {
             setUpdateTime.invoke(entity,now);
             setUpdateUser.invoke(entity,user);
 
-        }else{
+        }else if (operationType == OperationType.INSERT){
             Method setCreateTime = entity.getClass().getMethod("setCreateTime",LocalDateTime.class);
             Method setCreateUser = entity.getClass().getMethod("setCreateUser",Long.class);
             Method setUpdateTime = entity.getClass().getMethod("setUpdateTime",LocalDateTime.class);
@@ -60,7 +60,13 @@ public class AutoFillAop {
             setCreateUser.invoke(entity,user);
             setUpdateTime.invoke(entity,now);
             setUpdateUser.invoke(entity,user);
+        }else if(operationType == OperationType.CHANGE_STATUS){
+            log.info("状态修改日志...");
+            Method setUpdateTime = entity.getClass().getMethod("setUpdateTime", LocalDateTime.class);
+            Method setUpdateUser = entity.getClass().getMethod("setUpdateUser", Long.class);
 
+            setUpdateTime.invoke(entity,now);
+            setUpdateUser.invoke(entity,user);
         }
 
     }

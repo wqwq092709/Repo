@@ -38,12 +38,10 @@ public class DishController {
     @ApiOperation("启用或禁用菜品")
     @PostMapping("/status/{status}")
     public Result startOrEnd(@PathVariable Integer status,long id){
-
-        DishDTO dishDTO = new DishDTO();
-        dishDTO.setId(id);
-        dishDTO.setStatus(status);
-
-        dishService.startOrEnd(dishDTO);
+        Dish dish = new Dish();
+        dish.setStatus(status);
+        dish.setId(id);
+        dishService.startOrEnd(dish);
         return Result.success();
     }
     @ApiOperation("更新菜品")

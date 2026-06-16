@@ -42,7 +42,7 @@ public interface EmployeeMapper {
      * @param employee
      */
     @AutoFill(OperationType.CHANGE_STATUS)
-    @Update("update employee set status=#{status} where id = #{id}")
+    @Update("update employee set status = #{status}, update_time = #{updateTime}, update_user = #{updateUser} where id = #{id}")
     void startOrEnd(Employee employee);
 
     /**

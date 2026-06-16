@@ -41,11 +41,11 @@ public interface DishMapper {
 
     /**
      * 启用或禁用菜品
-     * @param dishDTO
+     * @param dish
      */
     @AutoFill(OperationType.CHANGE_STATUS)
-    @Update("update dish set status = #{status} where id = #{id}")
-    void startOrEnd(DishDTO dishDTO);
+    @Update("update dish set status = #{status}, update_time = #{updateTime}, update_user = #{updateUser} where id = #{id}")
+    void startOrEnd(Dish dish);
 
     /**
      * 更新菜品

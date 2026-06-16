@@ -23,9 +23,9 @@ public interface DishService {
 
     /**
      * 启用或禁用菜品
-     * @param dishDTO
+     * @param dish
      */
-    void startOrEnd(DishDTO dishDTO);
+    void startOrEnd(Dish dish);
 
     /**
      * 更新菜品

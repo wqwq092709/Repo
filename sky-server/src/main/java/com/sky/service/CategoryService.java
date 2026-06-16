@@ -21,10 +21,9 @@ public interface CategoryService {
 
     /**
      * 启用禁用分类
-     * @param status
-     * @param id
+     * @param
      */
-    void startOrEnd(Integer status, long id);
+    void startOrEnd(Category category);
     /**
      * 根据id查询分类
      * @param id

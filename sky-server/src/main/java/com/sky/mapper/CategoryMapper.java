@@ -26,8 +26,10 @@ public interface CategoryMapper {
      * @param id
      */
     @AutoFill(OperationType.CHANGE_STATUS)
-    @Update("update category set status = #{status} where id = #{id}")
-    void startOrEnd(Integer status, long id);
+    @Update("update category " +
+            "set status = #{status}, update_time = #{updateTime},update_user = #{updateUser} " +
+            " where id = #{id}")
+    void startOrEnd(Category category);
 
     /**
      * 根据id查询分类

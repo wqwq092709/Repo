@@ -24,13 +24,12 @@
                 image = #{image},
             </if>
 
-            <if test="name != null and name != ''">
-                name = #{name},
-            </if>
-
             <if test="description != null and description != ''">
                 description = #{description},
             </if>
+
+            update_time = #{updateTime},
+            update_user = #{updateUser},
         </set>
         where id = #{id}
     </update>
@@ -53,7 +52,7 @@
             </if>
 
             <if test="name != null and name != '' ">
-                and name like concat ('%',#{name},'%')
+                and d.name like concat ('%',#{name},'%')
             </if>
 
             <if test="status != null">

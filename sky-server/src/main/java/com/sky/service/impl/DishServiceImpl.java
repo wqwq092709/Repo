@@ -35,7 +35,6 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
 
-
     @Transactional
     @Override
     public void insert(DishDTO dishDTO) {
@@ -79,8 +78,8 @@ public class DishServiceImpl implements DishService {
 
 
     @Override
-    public void startOrEnd(DishDTO dishDTO) {
-        dishMapper.startOrEnd(dishDTO);
+    public void startOrEnd(Dish dish) {
+        dishMapper.startOrEnd(dish);
     }
 
 

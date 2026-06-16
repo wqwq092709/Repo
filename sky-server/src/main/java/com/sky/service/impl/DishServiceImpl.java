@@ -12,11 +12,15 @@ import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.concurrent.ConcurrentUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -81,7 +85,9 @@ public class DishServiceImpl implements DishService {
         Long dishId = dishDTO.getId();
 
         // 1. 删除旧口味
-        dishFlavorMapper.delete(dishId);
+        List<Long> ids = new ArrayList<>();
+        ids.add(dishId);
+        dishFlavorMapper.deleteByDishIds(ids);
 
         // 2. 批量插入新口味
         List<DishFlavor> flavors = dishDTO.getFlavors();
@@ -102,8 +108,16 @@ public class DishServiceImpl implements DishService {
         return dishVO;
     }
 
+    @Transactional
     @Override
     public void deleteBatch(List<Long> ids) {
+        if(CollectionUtils.isEmpty(ids)){
+            return;
+        }
+        //先删相关口味
+        dishFlavorMapper.deleteByDishIds(ids);
+        //再删菜品
         dishMapper.deleteBatch(ids);
+
     }
 }

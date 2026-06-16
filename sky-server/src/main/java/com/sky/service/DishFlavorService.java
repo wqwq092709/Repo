@@ -21,9 +21,13 @@ public interface DishFlavorService {
 
     /**
      * 根据菜品删除口味
-     * @param id
+     * @param ids
      */
-    void deleteByDishId(long id);
+    void deleteByDishIds(List<Long> ids);
 
+    /**
+     * 更新菜品
+     * @param dishDTO
+     */
     void update(DishDTO dishDTO);
 }

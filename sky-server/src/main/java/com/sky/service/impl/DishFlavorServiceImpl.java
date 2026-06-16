@@ -7,6 +7,7 @@ import com.sky.service.DishFlavorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +28,8 @@ public class DishFlavorServiceImpl implements DishFlavorService {
     }
 
     @Override
-    public void deleteByDishId(long id) {
-        dishFlavorMapper.delete(id);
+    public void deleteByDishIds(List<Long> ids) {
+        dishFlavorMapper.deleteByDishIds(ids);
     }
 
     @Override
@@ -38,7 +39,9 @@ public class DishFlavorServiceImpl implements DishFlavorService {
         //若口味为空则删除全部的相关口味
         if(dishDTO.getFlavors().isEmpty()) {
 
-            dishFlavorMapper.delete(dishId);
+            List<Long> ids = new ArrayList<>();
+            ids.add(dishId);
+            dishFlavorMapper.deleteByDishIds(ids);
 
         }else {
 

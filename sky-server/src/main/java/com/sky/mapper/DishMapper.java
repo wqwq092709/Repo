@@ -9,6 +9,8 @@ import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -58,4 +60,10 @@ public interface DishMapper {
      */
     @Select("select * from dish where id = #{id}")
     DishVO getById(long id);
+
+    /**
+     * 批量删除
+     * @param ids
+     */
+    void deleteBatch(List<Long> ids);
 }

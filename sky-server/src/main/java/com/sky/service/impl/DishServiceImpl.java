@@ -101,4 +101,9 @@ public class DishServiceImpl implements DishService {
         dishVO.setFlavors(dishFlavors);
         return dishVO;
     }
+
+    @Override
+    public void deleteBatch(List<Long> ids) {
+        dishMapper.deleteBatch(ids);
+    }
 }

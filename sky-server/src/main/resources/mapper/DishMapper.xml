@@ -35,6 +35,15 @@
         where id = #{id}
     </update>
 
+    <!--批量删除-->
+    <delete id="deleteBatch">
+        delete from dish where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+
     <!--分页查询菜品-->
     <select id="page" resultType="Dish">
         select *
@@ -46,7 +55,7 @@
             </if>
 
             <if test="name != null and name != '' ">
-                and name = #{name}
+                and name like concat ('%',#{name},'%')
             </if>
 
             <if test="status != null">

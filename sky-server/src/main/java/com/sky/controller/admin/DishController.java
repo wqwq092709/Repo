@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "菜品管理")
 @RestController
 @RequestMapping("/admin/dish")
@@ -56,5 +58,12 @@ public class DishController {
     public Result<DishVO> getById(@PathVariable long id){
         DishVO dishVO = dishService.getById(id);
         return Result.success(dishVO);
+    }
+
+    @ApiOperation("批量删除")
+    @DeleteMapping
+    public Result delete(@RequestParam List<Long> ids){
+        dishService.deleteBatch(ids);
+        return Result.success();
     }
 }

@@ -56,7 +56,7 @@
             </if>
 
             <if test="status != null">
-                and status = #{status}
+                and d.status = #{status}
             </if>
         </where>
         order by price asc

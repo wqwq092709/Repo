@@ -55,13 +55,21 @@ public interface DishMapper {
     void update(DishDTO dishDTO);
 
     /**
-     * 根据id查询菜品
-     *
+     * 根据id查询菜品（回显用）
      * @param id
      * @return
      */
     @Select("select * from dish where id = #{id}")
     DishVO getById(long id);
+
+    /**
+     * 根据id列表批量查询（状态检查用）
+     * @param ids
+     * @return
+     */
+    @Select("<script>select * from dish where id in " +
+            "<foreach collection='list' item='id' open='(' close=')' separator=','>#{id}</foreach></script>")
+    List<Dish> getByIds(List<Long> ids);
 
     /**
      * 批量删除

@@ -26,7 +26,7 @@ public interface CategoryMapper {
      * @param id
      */
     @Update("update category set status = #{status} where id = #{id}")
-    void startOrEnd(String status, String id);
+    void startOrEnd(Integer status, long id);
 
     /**
      * 根据id查询分类

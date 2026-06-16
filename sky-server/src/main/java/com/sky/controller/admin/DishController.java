@@ -6,6 +6,7 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +32,29 @@ public class DishController {
 
         PageResult pageResult = dishService.page(dishPageQueryDTO);
         return Result.success(pageResult);
+    }
+    @ApiOperation("启用或禁用菜品")
+    @PostMapping("/status/{status}")
+    public Result startOrEnd(@PathVariable Integer status,long id){
 
+        DishDTO dishDTO = new DishDTO();
+        dishDTO.setId(id);
+        dishDTO.setStatus(status);
+
+        dishService.startOrEnd(dishDTO);
+        return Result.success();
+    }
+    @ApiOperation("更新菜品")
+    @PutMapping
+    public Result update(@RequestBody DishDTO dishDTO){
+        dishService.update(dishDTO);
+        return Result.success();
+    }
+
+    @ApiOperation("根据id查询菜品")
+    @GetMapping("/{id}")
+    public Result<DishVO> getById(@PathVariable long id){
+        DishVO dishVO = dishService.getById(id);
+        return Result.success(dishVO);
     }
 }

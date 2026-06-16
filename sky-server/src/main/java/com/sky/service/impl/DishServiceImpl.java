@@ -10,6 +10,8 @@ import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class DishServiceImpl implements DishService {
 
@@ -26,7 +29,6 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
 
-    //事务管理
     @Transactional
     @Override
     public void insert(DishDTO dishDTO) {
@@ -60,9 +62,43 @@ public class DishServiceImpl implements DishService {
         //开启分页查询
         PageHelper.startPage(page,pageSize);
         Page<Dish> dishPage = dishMapper.page(dishPageQueryDTO);
+        log.info("dishPage:{}",dishPage);
 
         long total = dishPage.getTotal();
+
         List<Dish> result = dishPage.getResult();
         return new PageResult(total,result);
+    }
+
+    @Override
+    public void startOrEnd(DishDTO dishDTO) {
+        dishMapper.startOrEnd(dishDTO);
+    }
+
+    @Transactional
+    @Override
+    public void update(DishDTO dishDTO) {
+        Long dishId = dishDTO.getId();
+
+        // 1. 删除旧口味
+        dishFlavorMapper.delete(dishId);
+
+        // 2. 批量插入新口味
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        if (flavors != null && !flavors.isEmpty()) {
+            flavors.forEach(flavor -> flavor.setDishId(dishId));
+            dishFlavorMapper.insertBatch(flavors);
+        }
+
+        // 3. 更新菜品
+        dishMapper.update(dishDTO);
+    }
+
+    @Override
+    public DishVO getById(long id) {
+        List<DishFlavor> dishFlavors = dishFlavorMapper.getByDishId(id);
+        DishVO dishVO = dishMapper.getById(id);
+        dishVO.setFlavors(dishFlavors);
+        return dishVO;
     }
 }

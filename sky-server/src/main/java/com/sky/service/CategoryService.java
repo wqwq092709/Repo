@@ -24,8 +24,7 @@ public interface CategoryService {
      * @param status
      * @param id
      */
-    void startOrEnd(String status, String id);
-
+    void startOrEnd(Integer status, long id);
     /**
      * 根据id查询分类
      * @param id

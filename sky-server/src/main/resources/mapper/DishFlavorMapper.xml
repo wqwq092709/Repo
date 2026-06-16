@@ -11,8 +11,14 @@
             (#{flavor.dishId},#{flavor.name},#{flavor.value})
         </foreach>
     </insert>
-
-    <select id="page">
-
-    </select>
+    <!--更新口味-->
+    <update id="update">
+        <foreach collection="dishFlavors" item="flavor" separator=";">
+            update dish_flavor
+            set
+            name = #{flavor.name},
+            value = #{flavor.value}
+            where dishId = #{flavor.dishId}
+        </foreach>
+    </update>
 </mapper>

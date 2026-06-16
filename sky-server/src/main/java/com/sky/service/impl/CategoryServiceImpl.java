@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @param id
      */
     @Override
-    public void startOrEnd(String status, String id) {
+    public void startOrEnd(Integer status, long id) {
         categoryMapper.startOrEnd(status,id);
     }
 
@@ -96,6 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
+        category.setStatus(StatusConstant.ENABLE);
         categoryMapper.save(category);
     }
 

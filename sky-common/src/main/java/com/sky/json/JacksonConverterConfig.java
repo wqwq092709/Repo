@@ -40,7 +40,7 @@ public class JacksonConverterConfig {
     /**
      * 配置 ObjectMapper
      */
-    private static ObjectMapper createObjectMapper() {
+    public static ObjectMapper createObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // 日期格式

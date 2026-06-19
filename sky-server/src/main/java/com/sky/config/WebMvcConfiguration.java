@@ -62,10 +62,22 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("管理端接口")
                 .apiInfo(apiInfo())
                 .select()
                 //Controller 所在包路径
                 .apis(RequestHandlerSelectors.basePackage("com.sky.controller.admin"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+    @Bean
+    public Docket createRestApi2() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("用户端接口")
+                .apiInfo(apiInfo())
+                .select()
+                //Controller 所在包路径
+                .apis(RequestHandlerSelectors.basePackage("com.sky.controller.user"))
                 .paths(PathSelectors.any())
                 .build();
     }

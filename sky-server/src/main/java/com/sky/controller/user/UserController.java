@@ -70,4 +70,5 @@ public class UserController {
         userService.updateProfile(userProfileDTO);
         return Result.success();
     }
+
 }

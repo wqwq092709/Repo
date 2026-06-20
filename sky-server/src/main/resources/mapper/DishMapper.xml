@@ -61,4 +61,9 @@
         </where>
         order by price asc
     </select>
+
+    <!--根据分类id查询菜品-->
+    <select id="getListByCategoryId" resultType="dishVO">
+        select * from dish where category_id = #{id}
+    </select>
 </mapper>

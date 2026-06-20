@@ -1,7 +1,12 @@
 package com.sky.mapper;
 
+import com.sky.vo.DishItemVO;
+import com.sky.vo.DishVO;
+import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface SetmealMapper {
@@ -13,5 +18,22 @@ public interface SetmealMapper {
      */
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
+
+    /**
+     * 根据分类id查询套餐
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from setmeal where category_id = #{categoryId}")
+    List<SetmealVO> list(long categoryId);
+
+    /**
+     * 根据套餐id查询
+     * @param setmealId
+     * @return
+     */
+    @Select("select sd.name,sd.copies,d.image,d.name,d.description from setmeal_dish sd left join dish d " +
+            "on sd.dish_id = d.id where sd.setmeal_id = #{setmealId}")
+    List<DishItemVO> getDishItemBySetmealId(Integer setmealId);
 
 }

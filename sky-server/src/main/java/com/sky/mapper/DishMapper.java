@@ -72,14 +72,17 @@ public interface DishMapper {
     List<Dish> getByIds(List<Long> ids);
 
     /**
+     * 根据分类id查询已启用的菜品
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from dish where status = 1 and category_id = #{categoryId}")
+    List<Dish> getByCategoryId(Long categoryId);
+
+    /**
      * 批量删除
      * @param ids
      */
     void deleteBatch(List<Long> ids);
 
-    /**
-     * 根据分类id查询菜品
-     * @return
-     */
-    List<DishVO> getListByCategoryId(Integer categoryId);
 }

@@ -22,9 +22,9 @@ public class SetmealController {
     @GetMapping("/list")
     public Result<List<SetmealVO>> list(@RequestParam("categoryId") Long categoryId){
         log.info("user/setmeal/list接口正常...");
-        List<SetmealVO> setmealVOS = setmealMapper.list(categoryId);
+    List<SetmealVO> setmealVOS = setmealMapper.list(categoryId);
         return Result.success(setmealVOS);
-    }
+}
     @GetMapping("/dish/{id}")
     public Result<List<DishItemVO>> getDishBySetmealId(@PathVariable Integer id){
         List<DishItemVO> dishVOS = setmealMapper.getDishItemBySetmealId(id);

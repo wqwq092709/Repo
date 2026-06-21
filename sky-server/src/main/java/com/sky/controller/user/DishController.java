@@ -1,6 +1,7 @@
 package com.sky.controller.user;
 
-import com.sky.mapper.DishMapper;
+import com.sky.entity.Dish;
+
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -16,11 +17,13 @@ import java.util.List;
 public class DishController {
 
     @Autowired
-    private DishMapper dishMapper;
+    private DishService dishService;
 
     @GetMapping("/list")
     public Result<List<DishVO>> getListById(Integer categoryId){
-        List<DishVO> dishVOList = dishMapper.getListByCategoryId(categoryId);
+        Dish dish = new Dish();
+        dish.setCategoryId((long)categoryId );
+        List<DishVO> dishVOList = dishService.listWithFlavor(dish);
         return Result.success(dishVOList);
     }
 }

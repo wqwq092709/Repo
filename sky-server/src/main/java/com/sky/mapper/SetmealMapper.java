@@ -28,7 +28,7 @@ public interface SetmealMapper {
     List<SetmealVO> list(long categoryId);
 
     /**
-     * 根据套餐id查询
+     * 根据套餐id查询菜品
      * @param setmealId
      * @return
      */

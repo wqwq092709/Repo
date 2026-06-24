@@ -1,7 +1,8 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
+import com.sky.entity.Setmeal;
 import com.sky.vo.DishItemVO;
-import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -36,4 +37,17 @@ public interface SetmealMapper {
             "on sd.dish_id = d.id where sd.setmeal_id = #{setmealId}")
     List<DishItemVO> getDishItemBySetmealId(Integer setmealId);
 
+    /**
+     *分页查询套餐
+     * @return page<setmealVo>
+     */
+    //TODO 后续添加setmealMapper.xml文件
+    @Select("select * from setmeal")
+    Page<SetmealVO> pageSetmeal();
+
+    /**
+     * 根据id查询套餐
+     */
+    @Select("select * from setmeal")
+    Setmeal getSetmealById(long id);
 }

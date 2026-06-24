@@ -98,7 +98,6 @@ public class CategoryServiceImpl implements CategoryService {
         category.setStatus(StatusConstant.ENABLE);
         categoryMapper.save(category);
     }
-
     /**
      * 删除分类
      * @param id

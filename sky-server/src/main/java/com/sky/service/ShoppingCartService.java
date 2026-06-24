@@ -18,4 +18,10 @@ public interface ShoppingCartService {
      * @return
      */
     List<ShoppingCart> list(ShoppingCart shoppingCart);
+
+    /**
+     * 根据id删除购物车中的商品
+     *@return
+     */
+    void deleteById(ShoppingCartDTO shoppingCartDTO);
 }

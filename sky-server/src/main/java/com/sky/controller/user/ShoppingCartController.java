@@ -42,11 +42,21 @@ public class ShoppingCartController {
         return Result.success(shoppingCarts);
     }
 
+    @ApiOperation("删除购物车的商品")
     @PostMapping("/sub")
     public Result deleteById(@RequestBody ShoppingCartDTO shoppingCartDTO){
         log.info("请求到删除购物车中的商品");
 
         shoppingCartService.deleteById(shoppingCartDTO);
         return Result.success();
+    }
+
+    @ApiOperation("清空购物车")
+    @DeleteMapping("/clean")
+    public Result cleanAll(){
+        log.info("请求到清空购物车");
+        shoppingCartService.deleteAll();
+        log.info("清空完毕");
+        return  Result.success();
     }
 }

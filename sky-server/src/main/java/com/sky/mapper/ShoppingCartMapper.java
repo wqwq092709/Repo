@@ -16,4 +16,6 @@ public interface ShoppingCartMapper {
     void updateNumberById(ShoppingCart shoppingCart);
 
     void deleteById(ShoppingCartDTO shoppingCartDTO);
+
+    void deleteAll();
 }

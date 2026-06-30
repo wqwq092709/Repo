@@ -17,5 +17,5 @@ public interface ShoppingCartMapper {
 
     void deleteById(ShoppingCartDTO shoppingCartDTO);
 
-    void deleteAll();
+    void deleteAll(long userId);
 }

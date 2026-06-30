@@ -106,7 +106,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteAll() {
-        shoppingCartMapper.deleteAll();
+    public void deleteAll(long userId) {
+        shoppingCartMapper.deleteAll(userId);
     }
 }

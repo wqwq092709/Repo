@@ -28,7 +28,7 @@
 
     <!--清空购物车-->
     <delete id="deleteAll">
-        delete from shopping_cart
+        delete from shopping_cart where user_id = #{userId}
     </delete>
 
     <!--查询购物车-->

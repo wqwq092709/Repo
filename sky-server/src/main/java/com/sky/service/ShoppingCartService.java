@@ -28,5 +28,5 @@ public interface ShoppingCartService {
     /**
      * 清空购物车
      */
-    void deleteAll();
+    void deleteAll(long userId);
 }

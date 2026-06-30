@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Year;
 import java.util.List;
 
 @Slf4j
@@ -53,9 +54,9 @@ public class ShoppingCartController {
 
     @ApiOperation("清空购物车")
     @DeleteMapping("/clean")
-    public Result cleanAll(){
+    public Result cleanAll(long userId){
         log.info("请求到清空购物车");
-        shoppingCartService.deleteAll();
+        shoppingCartService.deleteAll(userId);
         log.info("清空完毕");
         return  Result.success();
     }

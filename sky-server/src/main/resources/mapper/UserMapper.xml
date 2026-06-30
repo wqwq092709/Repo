@@ -22,5 +22,8 @@
         </set>
         where id = #{id}
     </update>
+    <select id="getById" resultType="user">
+        select * from user where id = #{id}
+    </select>
 
 </mapper>

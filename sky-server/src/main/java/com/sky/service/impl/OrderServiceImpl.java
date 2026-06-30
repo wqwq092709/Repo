@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersDTO;
+import com.sky.dto.OrdersPaymentDTO;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
@@ -10,6 +11,7 @@ import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.OrderMapper;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
+import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +71,8 @@ public class OrderServiceImpl implements OrderService {
         //存入订单明细表
         Long orderId = orders.getId();
         List<OrderDetail> orderDetailList = new ArrayList<>();
-        OrderDetail orderDetail = new OrderDetail();
         shopList.forEach(shop ->{
+            OrderDetail orderDetail = new OrderDetail();
             BeanUtils.copyProperties(shop,orderDetail);
             orderDetail.setOrderId(orderId);
             orderDetailList.add(orderDetail);
@@ -89,5 +91,46 @@ public class OrderServiceImpl implements OrderService {
                 .orderAmount(ordersAmount)
                 .orderNumber(orderNumber)
                 .orderTime(orderTime).build();
+    }
+
+    /**
+     * 订单支付
+     *
+     * @param ordersPaymentDTO
+     * @return
+     */
+    public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+
+        // 模拟支付：直接标记支付成功
+        paySuccess(ordersPaymentDTO.getOrderNumber());
+
+        return OrderPaymentVO.builder()
+                .nonceStr("mock")
+                .paySign("mock")
+                .timeStamp(String.valueOf(System.currentTimeMillis()))
+                .signType("RSA")
+                .packageStr("prepay_id=mock")
+                .build();
+    }
+
+    /**
+     * 支付成功，修改订单状态
+     *
+     * @param outTradeNo
+     */
+    public void paySuccess(String outTradeNo) {
+
+        // 根据订单号查询订单
+        Orders ordersDB = orderMapper.getByNumber(outTradeNo);
+
+        // 根据订单id更新订单的状态、支付方式、支付状态、结账时间
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .status(Orders.TO_BE_CONFIRMED)
+                .payStatus(Orders.PAID)
+                .checkoutTime(LocalDateTime.now())
+                .build();
+
+        orderMapper.update(orders);
     }
 }

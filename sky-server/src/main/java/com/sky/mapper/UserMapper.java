@@ -26,4 +26,11 @@ public interface UserMapper {
      * @param user
      */
     void update(User user);
+
+    /**
+     * 根据id查询用户
+     * @param id
+     * @return
+     */
+    User getById(long id);
 }

@@ -139,8 +139,8 @@ public class OrderServiceImpl implements OrderService {
                 .payStatus(Orders.PAID)
                 .checkoutTime(LocalDateTime.now())
                 .build();
-
-        orderMapper.update(orders);
+        List<Orders> ordersList = new ArrayList<>();
+        orderMapper.batchUpdate(ordersList);
     }
 
     @Override

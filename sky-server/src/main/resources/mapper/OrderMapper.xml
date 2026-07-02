@@ -28,35 +28,36 @@
         </foreach>
     </insert>
 
-    <update id="update">
+    <!--批量更新-->
+    <update id="batchUpdate">
         update orders
-        <set>
-            <if test="cancelReason != null and cancelReason!='' ">
-                cancel_reason=#{cancelReason},
-            </if>
-            <if test="rejectionReason != null and rejectionReason!='' ">
-                rejection_reason=#{rejectionReason},
-            </if>
-            <if test="cancelTime != null">
-                cancel_time=#{cancelTime},
-            </if>
-            <if test="payStatus != null">
-                pay_status=#{payStatus},
-            </if>
-            <if test="payMethod != null">
-                pay_method=#{payMethod},
-            </if>
-            <if test="checkoutTime != null">
-                checkout_time=#{checkoutTime},
-            </if>
-            <if test="status != null">
-                status = #{status},
-            </if>
-            <if test="deliveryTime != null">
-                delivery_time = #{deliveryTime}
-            </if>
-        </set>
-        where id = #{id}
+        <trim prefix="set" suffixOverrides=",">
+
+            <trim prefix="status = case" suffix="end,">
+                <foreach collection="ordersList" item="order">
+                    when id = #{order.id} then #{order.status}
+                </foreach>
+            </trim>
+
+            <trim prefix="cancel_time = case" suffix="end,">
+                <foreach collection="ordersList" item="order">
+                    when id = #{order.id} then #{order.cancelTime}
+                </foreach>
+            </trim>
+
+            <trim prefix="cancel_reason = case" suffix="end,">
+                <foreach collection="ordersList" item="order">
+                    when id = #{order.id} then #{order.cancelReason}
+                </foreach>
+            </trim>
+        </trim>
+
+        <where>
+            id in
+            <foreach collection="ordersList" open="(" close=")" item="order" separator=",">
+                #{order.id}
+            </foreach>
+        </where>
     </update>
 
     <!--OrderVO结果映射，关联订单详情-->
@@ -140,6 +141,6 @@
 
     <!--查询超时订单-->
     <select id="getOutTimeOrder" resultType="orders">
-        select * from orders where pay_status = #{status} and order_time &lt; #{orderTime};
+        select * from orders where status = #{status} and order_time &lt; #{orderTime};
     </select>
 </mapper>

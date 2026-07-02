@@ -32,10 +32,10 @@ public interface OrderMapper {
     Orders getByNumber(String orderNumber);
 
     /**
-     * 修改订单信息
-     * @param orders
+     * 批量更新订单信息
+     * @param ordersList
      */
-    void update(Orders orders);
+    void batchUpdate(List<Orders> ordersList);
 
     /**
      * 历史订单查询

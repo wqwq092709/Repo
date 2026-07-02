@@ -21,26 +21,26 @@ public class MyTask {
     /**
      * 订单超时取消任务
      */
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0/5 * * * * ?")
     public void processOrderOutTime(){
         log.info("查询订单是否超时任务开启...");
         //查询订单超过下单后15分且处于未支付状态的
         Orders orders = Orders.builder()
-                .status(Orders.UN_PAID).
+                .status(Orders.PENDING_PAYMENT).
                 orderTime(LocalDateTime.now().plusMinutes(-15))
                 .build();
 
-        List<Orders> outTimeOrder = orderMapper.getOutTimeOrder(orders);
+        List<Orders> outTimeOrders = orderMapper.getOutTimeOrder(orders);
 
         //开始处理
-        if(outTimeOrder != null && !outTimeOrder.isEmpty()){
+        if(outTimeOrders != null && !outTimeOrders.isEmpty()){
             log.info("开始处理超时订单...");
-            for (Orders order : outTimeOrder) {
+            for (Orders order : outTimeOrders) {
                 order.setCancelTime(LocalDateTime.now());
                 order.setCancelReason("订单超时");
-                order.setPayStatus(Orders.CANCELLED);
-                orderMapper.update(order);
+                order.setStatus(Orders.CANCELLED);
             }
+            orderMapper.batchUpdate(outTimeOrders);
         }
 
     }

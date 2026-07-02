@@ -28,7 +28,7 @@
         </foreach>
     </insert>
 
-    <update id="update" parameterType="com.sky.entity.Orders">
+    <update id="update">
         update orders
         <set>
             <if test="cancelReason != null and cancelReason!='' ">
@@ -136,5 +136,10 @@
             order by order_time desc
         )
         order by o.order_time desc, od.id
+    </select>
+
+    <!--查询超时订单-->
+    <select id="getOutTimeOrder" resultType="orders">
+        select * from orders where pay_status = #{status} and order_time &lt; #{orderTime};
     </select>
 </mapper>

@@ -42,4 +42,10 @@ public interface OrderMapper {
      * @param ordersPageQueryDTO
      */
     Page<OrderVO> historyOrders(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     * 查询超时订单
+     * @return
+     */
+    List<Orders> getOutTimeOrder(Orders orders);
 }

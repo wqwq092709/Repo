@@ -1,12 +1,14 @@
 package com.sky.controller.user;
 
-import com.sky.dto.OrdersDTO;
+import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
+import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
-import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -24,15 +26,15 @@ public class OrderController {
 
     /**
      * 提交订单
-     * @param ordersDTO
+     * @param ordersSubmitDTO
      * @return
      */
     @ApiOperation("提交订单")
     @PostMapping("/submit")
-    public Result<OrderSubmitVO> submit(@RequestBody OrdersDTO ordersDTO){
+    public Result<OrderSubmitVO> submit(@RequestBody OrdersSubmitDTO ordersSubmitDTO){
 
         log.info("请求到OrderController");
-        OrderSubmitVO submitVO = orderService.submit(ordersDTO);
+        OrderSubmitVO submitVO = orderService.submit(ordersSubmitDTO);
 
         return Result.success(submitVO);
     }
@@ -42,12 +44,22 @@ public class OrderController {
      * @param ordersPaymentDTO
      * @return
      */
-    @PutMapping("/payment")
     @ApiOperation("订单支付")
+    @PutMapping("/payment")
     public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
         log.info("订单支付：{}", ordersPaymentDTO);
         OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
         log.info("生成预支付交易单：{}", orderPaymentVO);
         return Result.success(orderPaymentVO);
+    }
+
+    @ApiOperation("历史订单")
+    @GetMapping("/historyOrders")
+    public Result<PageResult> historyOrders(OrdersPageQueryDTO ordersPageQueryDTO){
+        log.info("请求到历史订单historyOrders");
+        long userId = BaseContext.getCurrentId();
+        ordersPageQueryDTO.setUserId(userId);
+        PageResult historyOrdersPage = orderService.historyOrders(ordersPageQueryDTO);
+        return Result.success(historyOrdersPage);
     }
 }

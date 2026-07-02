@@ -58,4 +58,83 @@
         </set>
         where id = #{id}
     </update>
+
+    <!--OrderVO结果映射，关联订单详情-->
+    <resultMap id="orderVOMap" type="com.sky.vo.OrderVO">
+        <id property="id" column="id"/>
+        <result property="number" column="number"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+        <result property="addressBookId" column="address_book_id"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="checkoutTime" column="checkout_time"/>
+        <result property="payMethod" column="pay_method"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="amount" column="amount"/>
+        <result property="remark" column="remark"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="userName" column="user_name"/>
+        <result property="consignee" column="consignee"/>
+        <result property="cancelReason" column="cancel_reason"/>
+        <result property="rejectionReason" column="rejection_reason"/>
+        <result property="cancelTime" column="cancel_time"/>
+        <result property="estimatedDeliveryTime" column="estimated_delivery_time"/>
+        <result property="deliveryStatus" column="delivery_status"/>
+        <result property="deliveryTime" column="delivery_time"/>
+        <result property="packAmount" column="pack_amount"/>
+        <result property="tablewareNumber" column="tableware_number"/>
+        <result property="tablewareStatus" column="tableware_status"/>
+        <collection property="orderDetailList" ofType="com.sky.entity.OrderDetail">
+            <id property="id" column="od_id"/>
+            <result property="name" column="od_name"/>
+            <result property="orderId" column="od_order_id"/>
+            <result property="dishId" column="od_dish_id"/>
+            <result property="setmealId" column="od_setmeal_id"/>
+            <result property="dishFlavor" column="od_dish_flavor"/>
+            <result property="number" column="od_number"/>
+            <result property="amount" column="od_amount"/>
+            <result property="image" column="od_image"/>
+        </collection>
+    </resultMap>
+
+    <!--历史订单（含订单详情）-->
+    <select id="historyOrders" resultMap="orderVOMap">
+        select
+            o.*,
+            od.id as od_id,
+            od.name as od_name,
+            od.order_id as od_order_id,
+            od.dish_id as od_dish_id,
+            od.setmeal_id as od_setmeal_id,
+            od.dish_flavor as od_dish_flavor,
+            od.number as od_number,
+            od.amount as od_amount,
+            od.image as od_image
+        from orders o
+        left join order_detail od on o.id = od.order_id
+        where o.id in (
+            select id from orders
+            <where>
+                user_id = #{userId}
+                <if test="status != null">
+                    and status = #{status}
+                </if>
+                <if test="number != null and number != ''">
+                    and number = #{number}
+                </if>
+                <if test="phone != null and phone != ''">
+                    and phone = #{phone}
+                </if>
+                <if test="beginTime != null">
+                    and order_time &gt;= #{beginTime}
+                </if>
+                <if test="endTime != null">
+                    and order_time &lt;= #{endTime}
+                </if>
+            </where>
+            order by order_time desc
+        )
+        order by o.order_time desc, od.id
+    </select>
 </mapper>

@@ -1,21 +1,28 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersDTO;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
+import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
 import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.OrderMapper;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,11 +39,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+
+    @Transactional
     @Override
-    public OrderSubmitVO submit(OrdersDTO ordersDTO) {
+    public OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO) {
 
         //检查提交的订单是否存在地址
-        Long addressBookId = ordersDTO.getAddressBookId();
+        Long addressBookId = ordersSubmitDTO.getAddressBookId();
         if (addressBookId == null){
             throw new OrderBusinessException("订单中没有地址");
         }
@@ -53,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         //存入订单表
         Orders orders = new Orders();
         LocalDateTime now = LocalDateTime.now();
-        BeanUtils.copyProperties(ordersDTO,orders);
+        BeanUtils.copyProperties(ordersSubmitDTO,orders);
 
         orders.setStatus(Orders.PENDING_PAYMENT);
         orders.setPayStatus(Orders.UN_PAID);
@@ -65,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
         orders.setDeliveryStatus(1);
         orders.setUserId(userId);
         orders.setOrderTime(now);
-        orders.setEstimatedDeliveryTime(now);
+        orders.setEstimatedDeliveryTime(ordersSubmitDTO.getEstimatedDeliveryTime());
         orderMapper.submit(orders);
 
         //存入订单明细表
@@ -132,5 +141,22 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    @Override
+    public PageResult historyOrders(OrdersPageQueryDTO ordersPageQueryDTO) {
+
+        int page = ordersPageQueryDTO.getPage();
+        int pageSize = ordersPageQueryDTO.getPageSize();
+        PageHelper.startPage(page,pageSize);
+        Page<OrderVO> ordersPage = orderMapper.historyOrders(ordersPageQueryDTO);
+
+        List<OrderVO> orders = ordersPage.getResult();
+        long total = ordersPage.getTotal();
+
+        PageResult pageResult = new PageResult();
+        pageResult.setRecords(orders);
+        pageResult.setTotal(total);
+        return pageResult;
     }
 }

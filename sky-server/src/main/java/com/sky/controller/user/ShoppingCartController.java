@@ -54,8 +54,9 @@ public class ShoppingCartController {
 
     @ApiOperation("清空购物车")
     @DeleteMapping("/clean")
-    public Result cleanAll(long userId){
+    public Result cleanAll(){
         log.info("请求到清空购物车");
+        Long userId = BaseContext.getCurrentId();
         shoppingCartService.deleteAll(userId);
         log.info("清空完毕");
         return  Result.success();

@@ -140,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
                 .checkoutTime(LocalDateTime.now())
                 .build();
         List<Orders> ordersList = new ArrayList<>();
+        ordersList.add(orders);
         orderMapper.batchUpdate(ordersList);
     }
 

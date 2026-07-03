@@ -50,6 +50,7 @@
                     when id = #{order.id} then #{order.cancelReason}
                 </foreach>
             </trim>
+
         </trim>
 
         <where>
@@ -142,5 +143,10 @@
     <!--查询超时订单-->
     <select id="getOutTimeOrder" resultType="orders">
         select * from orders where status = #{status} and order_time &lt; #{orderTime};
+    </select>
+
+    <!--查询订单一直处于派送状态-->
+    <select id="getOrderIsDELIVERY" resultType="orders">
+        select * from orders where status = #{status} and order_time &lt; #{orderTime}
     </select>
 </mapper>

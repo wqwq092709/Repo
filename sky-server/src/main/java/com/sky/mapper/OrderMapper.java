@@ -48,4 +48,10 @@ public interface OrderMapper {
      * @return
      */
     List<Orders> getOutTimeOrder(Orders orders);
+
+    /**
+     * 查询订单一直处于派送状态
+     * @return
+     */
+    List<Orders> getOrderIsDELIVERY(Orders orders);
 }

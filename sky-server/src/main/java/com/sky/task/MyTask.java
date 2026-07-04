@@ -1,4 +1,4 @@
-package com.sky;
+package com.sky.task;
 
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
@@ -47,7 +47,7 @@ public class MyTask {
     /**
      * 处理订单一直处于派送状态
      */
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 * 1 * * ?")
     public void processOrderIsDELIVERY(){
         log.info("处理长时间处于派送状态的订单任务开启");
         //查询下单时间超过一个小时且处于派送中的订单

@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.context.BaseContext;
@@ -16,6 +17,7 @@ import com.sky.mapper.OrderMapper;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
+import com.sky.service.WebSocketServer;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
@@ -26,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -39,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Transactional
     @Override
@@ -110,8 +112,16 @@ public class OrderServiceImpl implements OrderService {
      */
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
 
+        UUID RandomUserId = UUID.randomUUID();
         // 模拟支付：直接标记支付成功
         paySuccess(ordersPaymentDTO.getOrderNumber());
+
+        //推送来单提醒
+        Map<String,Object> message = new HashMap<>();
+        message.put("type",1);
+        message.put("content","订单号:"+ordersPaymentDTO.getOrderNumber());
+        String messageJson = JSON.toJSONString(message);
+        webSocketServer.sendToAllClient(messageJson);
 
         return OrderPaymentVO.builder()
                 .nonceStr("mock")
@@ -144,6 +154,11 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.batchUpdate(ordersList);
     }
 
+    /**
+     * 查询历史订单
+     * @param ordersPageQueryDTO
+     * @return
+     */
     @Override
     public PageResult historyOrders(OrdersPageQueryDTO ordersPageQueryDTO) {
 

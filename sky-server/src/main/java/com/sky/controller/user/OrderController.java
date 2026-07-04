@@ -100,6 +100,9 @@ public class OrderController {
     @GetMapping("/reminder/{id}")
     public Result reminder(@PathVariable Integer id) {
 
+        /**
+         * 催单限流
+         */
         Long userId = BaseContext.getCurrentId();
         String limitKey = LIMIT_USERID + userId;
 

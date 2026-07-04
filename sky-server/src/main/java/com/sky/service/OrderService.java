@@ -36,4 +36,11 @@ public interface OrderService {
      */
     PageResult historyOrders(OrdersPageQueryDTO ordersPageQueryDTO);
 
+    /**
+     * 根据订单id查询订单
+     * @param orderId
+     * @return
+     */
+    Orders getByOrderId(Integer orderId);
+
 }

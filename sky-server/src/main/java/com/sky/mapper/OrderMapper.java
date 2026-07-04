@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface OrderMapper {
+public interface  OrderMapper {
     /**
      * 提交订单
      * @param orders
@@ -54,4 +54,12 @@ public interface OrderMapper {
      * @return
      */
     List<Orders> getOrderIsDELIVERY(Orders orders);
+
+    /**
+     * 根据订单id查询订单
+     * @param orderId
+     * @return
+     */
+    @Select("select * from orders where id = #{orderId}")
+    Orders getById(Integer orderId);
 }

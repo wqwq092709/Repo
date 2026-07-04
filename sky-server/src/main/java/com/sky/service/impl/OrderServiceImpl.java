@@ -175,4 +175,14 @@ public class OrderServiceImpl implements OrderService {
         pageResult.setTotal(total);
         return pageResult;
     }
+
+    /**
+     * 根据订单id查询订单
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Orders getByOrderId(Integer orderId) {
+        return orderMapper.getById(orderId);
+    }
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api("用户端分类查询接口")
+@Api(tags = "用户端分类查询接口")
 @RestController("userCategoryController")
 @RequestMapping("/user/category")
 public class CategoryController {

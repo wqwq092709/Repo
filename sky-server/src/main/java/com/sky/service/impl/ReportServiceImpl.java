@@ -4,6 +4,7 @@ import com.sky.entity.Orders;
 import com.sky.mapper.ReportMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,12 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ReportMapper reportMapper;
 
+    /**
+     * 营业额数据
+     * @param begin
+     * @param end
+     * @return
+     */
     @Override
     public TurnoverReportVO getTurnoverStatistics(LocalDate begin, LocalDate end) {
 
@@ -57,5 +64,56 @@ public class ReportServiceImpl implements ReportService {
                 .build();
 
         return reportVO;
+    }
+
+    /**
+     * 用户数据
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
+
+        //获取范围内日期
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(begin);
+        while (!begin.equals(end)){
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+
+        //获取新增用户量
+        List<Integer> incrementUserList = new ArrayList<>();
+        Map<String,Object> condition = new HashMap<>();
+        LocalDateTime beginTime;
+        LocalDateTime endTime;
+        for (LocalDate date : dateList) {
+            beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            endTime = LocalDateTime.of(date, LocalTime.MAX);
+            condition.put("begin",beginTime);
+            condition.put("end",endTime);
+            Integer userStatisticsCount = reportMapper.getUserStatisticsIncrementByMap(condition);
+            userStatisticsCount = userStatisticsCount == null ? 0 : userStatisticsCount;
+            incrementUserList.add(userStatisticsCount);
+        }
+
+        //获取每天的总用户量
+        List<Integer> userStatisticsTotalList= new ArrayList<>();
+        for (LocalDate date : dateList) {
+            endTime = LocalDateTime.of(date, LocalTime.MAX);
+            Integer userStatisticsTotal = reportMapper.getUserStatisticsTotal(endTime);
+            userStatisticsTotal = userStatisticsTotal == null ? 0 : userStatisticsTotal;
+            userStatisticsTotalList.add(userStatisticsTotal);
+        }
+
+        //封装数据
+
+        UserReportVO userReportVO = UserReportVO.builder()
+                .dateList(StringUtils.join(dateList, ","))
+                .totalUserList(StringUtils.join(incrementUserList, ","))
+                .newUserList(StringUtils.join(userStatisticsTotalList,","))
+                .build();
+        return userReportVO;
     }
 }

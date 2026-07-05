@@ -1,10 +1,12 @@
 package com.sky.service.impl;
 
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.ReportMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -185,6 +187,42 @@ public class ReportServiceImpl implements ReportService {
                 .build();
 
         return orderReportVO;
+    }
+
+    /**
+     * 销售排名前10
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        Map<String,Object> getSalesTop10Condition = new HashMap<>();
+        getSalesTop10Condition.put("begin",beginTime);
+        getSalesTop10Condition.put("end",endTime);
+        List<GoodsSalesDTO> salesTop10List = reportMapper.getSalesTop10(getSalesTop10Condition);
+
+        List<String> goodsName = new ArrayList<>();
+        List<Integer> goodsNumber = new ArrayList<>();
+        for (GoodsSalesDTO goodsSalesDTO : salesTop10List) {
+            String name = goodsSalesDTO.getName();
+            goodsName.add(name);
+            Integer number = goodsSalesDTO.getNumber();
+            goodsNumber.add(number);
+        }
+
+        String goodsNamesString = StringUtils.join(goodsName, ",");
+        String goodsNumberString = StringUtils.join(goodsNumber, ",");
+        SalesTop10ReportVO salesTop10ReportVO = SalesTop10ReportVO
+                .builder()
+                .nameList(goodsNamesString)
+                .numberList(goodsNumberString)
+                .build();
+
+        return salesTop10ReportVO;
     }
 
 

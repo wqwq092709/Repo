@@ -1,12 +1,14 @@
 package com.sky.mapper;
 
 
+import com.sky.dto.GoodsSalesDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 
 import java.time.LocalDateTime;
 
+import java.util.List;
 import java.util.Map;
 
 @Mapper
@@ -51,4 +53,12 @@ public interface ReportMapper {
      * @return
      */
     Integer validOrderDayCount(Map<String, Object> vailOrderCondition);
+
+    /**
+     * 销售排名前10
+     * @param vailOrderCondition
+     * @return
+     */
+    List<GoodsSalesDTO> getSalesTop10(Map<String, Object> salesTop10Condition);
+
 }

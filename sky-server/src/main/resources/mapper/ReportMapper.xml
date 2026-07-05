@@ -69,5 +69,18 @@
 
         </where>
     </select>
+    <!--获取销售排名前10-->
+    <select id="getSalesTop10" resultType="goodsSalesDTO">
+        select od.name, sum(od.number) as number
+        from order_detail od
+        join orders o on od.order_id = o.id
+        where o.status = 5
+        and o.order_time &gt;= #{begin}
+        and o.order_time &lt;= #{end}
+        group by od.name
+        order by number desc
+        limit 10
+    </select>
+
 
 </mapper>

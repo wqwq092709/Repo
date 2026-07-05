@@ -1,8 +1,10 @@
 package com.sky.service.impl;
 
+
 import com.sky.entity.Orders;
 import com.sky.mapper.ReportMapper;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -111,9 +113,79 @@ public class ReportServiceImpl implements ReportService {
 
         UserReportVO userReportVO = UserReportVO.builder()
                 .dateList(StringUtils.join(dateList, ","))
-                .totalUserList(StringUtils.join(incrementUserList, ","))
-                .newUserList(StringUtils.join(userStatisticsTotalList,","))
+                .totalUserList(StringUtils.join(userStatisticsTotalList, ","))
+                .newUserList(StringUtils.join(incrementUserList,","))
                 .build();
         return userReportVO;
     }
+
+    /**
+     * 订单数据量
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end) {
+
+        //获取日期
+        LocalDate tempBegin = begin;
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(tempBegin);
+        while (!tempBegin.equals(end)){
+            tempBegin = tempBegin.plusDays(1);
+            dateList.add(tempBegin);
+        }
+
+        //每日订单数
+        Map<String,Object> orderCondition = new HashMap<>();
+        List<Integer> orderDayCountList = new ArrayList<>();
+        for (LocalDate date : dateList) {
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+            orderCondition.put("begin",beginTime);
+            orderCondition.put("end",endTime);
+            Integer orderDayCount = reportMapper.getOrderStatistics(orderCondition);
+            orderDayCount = orderDayCount == null ? 0 : orderDayCount;
+            orderDayCountList.add(orderDayCount);
+        }
+
+        //有效订单数
+        Map<String,Object> validOrderCondition = new HashMap<>();
+        List<Integer> validOrderDayCountList = new ArrayList<>();
+
+        Integer orderStatus = Orders.COMPLETED;
+        for (LocalDate date : dateList) {
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+            validOrderCondition.put("begin",beginTime);
+            validOrderCondition.put("end",endTime);
+            validOrderCondition.put("status", orderStatus);
+            Integer validOrderDayCount = reportMapper.validOrderDayCount(validOrderCondition);
+            validOrderDayCount = validOrderDayCount == null ? 0 : validOrderDayCount;
+            validOrderDayCountList.add(validOrderDayCount);
+        }
+
+        //订单总数
+        int orderTotal = orderDayCountList.stream().mapToInt(Integer::intValue).sum();
+        //有效订单数
+        int validOrderTotal = validOrderDayCountList.stream().mapToInt(Integer::intValue).sum();
+        //订单完成率
+        double orderCompletionRate = orderTotal == 0 ? 0.0 : (double) validOrderTotal / orderTotal;
+
+
+        //封装数据
+        OrderReportVO orderReportVO = OrderReportVO.builder()
+                .dateList(StringUtils.join(dateList, ","))
+                .orderCountList(StringUtils.join(orderDayCountList, ","))
+                .validOrderCountList(StringUtils.join(validOrderDayCountList, ","))
+                .validOrderCount(validOrderTotal)
+                .totalOrderCount(orderTotal)
+                .orderCompletionRate(orderCompletionRate)
+                .build();
+
+        return orderReportVO;
+    }
+
+
 }

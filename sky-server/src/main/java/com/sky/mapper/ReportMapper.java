@@ -56,7 +56,7 @@ public interface ReportMapper {
 
     /**
      * 销售排名前10
-     * @param vailOrderCondition
+     * @param salesTop10Condition
      * @return
      */
     List<GoodsSalesDTO> getSalesTop10(Map<String, Object> salesTop10Condition);

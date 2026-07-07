@@ -85,4 +85,10 @@ public interface DishMapper {
      */
     void deleteBatch(List<Long> ids);
 
+    /**
+     * 根据状态统计菜品数量
+     */
+    @Select("select count(id) from dish where status = #{status}")
+    Integer countByStatus(Integer status);
+
 }

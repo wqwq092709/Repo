@@ -6,14 +6,18 @@ import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
+import com.sky.entity.ShoppingCart;
 import com.sky.exception.OrderBusinessException;
+import com.sky.mapper.ShoppingCartMapper;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.service.WebSocketServer;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.sky.exception.FrequentlyOperationException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 public class OrderController {
 
     public static final String LIMIT_USERID = "limit_";
-    public static Integer operationTimes = 0;
     @Autowired
     private OrderService orderService;
 
@@ -42,6 +46,9 @@ public class OrderController {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private ShoppingCartMapper shoppingCartMapper;
 
     /**
      * 提交订单
@@ -131,6 +138,72 @@ public class OrderController {
 
         webSocketServer.sendToAllClient(messageJson);
 
+        return Result.success();
+    }
+
+    /**
+     * 查询订单详情
+     * @param id
+     * @return
+     */
+    @ApiOperation("查询订单详情")
+    @GetMapping("/orderDetail/{id}")
+    public Result<OrderVO> getOrderDetail(@PathVariable Long id) {
+        log.info("查询订单详情:{}", id);
+        OrderVO orderVO = orderService.getOrderDetail(id);
+        return Result.success(orderVO);
+    }
+
+    /**
+     * 取消订单
+     * @param id
+     * @return
+     */
+    @ApiOperation("取消订单")
+    @PutMapping("/cancel/{id}")
+    public Result cancelOrder(@PathVariable Long id) {
+        log.info("用户取消订单:{}", id);
+        orderService.cancelOrder(id, "用户取消");
+
+        // 推送取消订单提醒
+        Map<String, Object> message = new HashMap<>();
+        message.put("type", 3);
+        message.put("orderId", id);
+        message.put("content", "订单号:" + id + " 已被用户取消");
+        String messageJson = JSON.toJSONString(message);
+        webSocketServer.sendToAllClient(messageJson);
+
+        return Result.success();
+    }
+
+    /**
+     * 再来一单：将订单中的菜品重新加入购物车
+     * @param id
+     * @return
+     */
+    @ApiOperation("再来一单")
+    @PostMapping("/repetition/{id}")
+    public Result repetition(@PathVariable Long id) {
+        log.info("再来一单:{}", id);
+        Long userId = BaseContext.getCurrentId();
+        // 获取订单详情
+        OrderVO orderVO = orderService.getOrderDetail(id);
+        List<OrderDetail> detailList = orderVO.getOrderDetailList();
+        if (detailList != null && !detailList.isEmpty()) {
+            for (OrderDetail detail : detailList) {
+                ShoppingCart cart = ShoppingCart.builder()
+                        .name(detail.getName())
+                        .userId(userId)
+                        .dishId(detail.getDishId())
+                        .setmealId(detail.getSetmealId())
+                        .dishFlavor(detail.getDishFlavor())
+                        .number(detail.getNumber())
+                        .amount(detail.getAmount())
+                        .image(detail.getImage())
+                        .build();
+                shoppingCartMapper.add(cart);
+            }
+        }
         return Result.success();
     }
 }

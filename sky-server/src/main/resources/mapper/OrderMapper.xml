@@ -51,6 +51,24 @@
                 </foreach>
             </trim>
 
+            <trim prefix="rejection_reason = case" suffix="end,">
+                <foreach collection="ordersList" item="order">
+                    when id = #{order.id} then #{order.rejectionReason}
+                </foreach>
+            </trim>
+
+            <trim prefix="delivery_time = case" suffix="end,">
+                <foreach collection="ordersList" item="order">
+                    when id = #{order.id} then #{order.deliveryTime}
+                </foreach>
+            </trim>
+
+            <trim prefix="checkout_time = case" suffix="end,">
+                <foreach collection="ordersList" item="order">
+                    when id = #{order.id} then #{order.checkoutTime}
+                </foreach>
+            </trim>
+
         </trim>
 
         <where>
@@ -118,7 +136,9 @@
         where o.id in (
             select id from orders
             <where>
-                user_id = #{userId}
+                <if test="userId != null">
+                    user_id = #{userId}
+                </if>
                 <if test="status != null">
                     and status = #{status}
                 </if>

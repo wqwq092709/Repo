@@ -6,12 +6,10 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 
 @Data
 @AllArgsConstructor
-@Slf4j
 public class AliOssUtil {
 
     private String endpoint;
@@ -61,7 +59,7 @@ public class AliOssUtil {
                 .append("/")
                 .append(objectName);
 
-        log.info("文件上传到:{}", stringBuilder.toString());
+        System.out.println("文件上传到:" + stringBuilder.toString());
 
         return stringBuilder.toString();
     }

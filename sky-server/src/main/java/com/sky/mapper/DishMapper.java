@@ -80,6 +80,14 @@ public interface DishMapper {
     List<Dish> getByCategoryId(Long categoryId);
 
     /**
+     * 根据分类id查询所有菜品（不过滤状态，供管理端使用）
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from dish where category_id = #{categoryId}")
+    List<Dish> getAllByCategoryId(Long categoryId);
+
+    /**
      * 批量删除
      * @param ids
      */

@@ -4,6 +4,7 @@ import com.sky.entity.SetmealDish;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +33,11 @@ public class SetmealDTO implements Serializable {
 
     //套餐菜品关系
     private List<SetmealDish> setmealDishes = new ArrayList<>();
+
+    //更新时间
+    private LocalDateTime updateTime;
+
+    //更新用户
+    private Long updateUser;
 
 }

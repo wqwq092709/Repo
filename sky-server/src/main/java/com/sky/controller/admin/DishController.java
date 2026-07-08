@@ -55,11 +55,20 @@ public class DishController {
         dishService.startOrEnd(dish);
         return Result.success();
     }
+
+    @ApiOperation("根据分类id查询菜品列表")
+    @GetMapping("/list")
+    public Result<List<DishVO>> list(Long categoryId) {
+        Dish dish = new Dish();
+        dish.setCategoryId(categoryId);
+        List<DishVO> dishVOList = dishService.listAllWithFlavor(dish);
+        return Result.success(dishVOList);
+    }
+
     @CacheEvict(value = value,allEntries = true)
     @ApiOperation("更新菜品")
     @PutMapping
     public Result update(@RequestBody DishDTO dishDTO){
-
         dishService.update(dishDTO);
         return Result.success();
     }

@@ -1,0 +1,46 @@
+# ===== 敏感配置文件（含数据库/Redis 密码、JWT 密钥、微信/阿里云凭证）=====
+application.yml
+application-*.yml
+application.yaml
+application-*.yaml
+application.properties
+application-*.properties
+
+# ===== 证书与私钥 =====
+*.p12
+*.pfx
+*.pem
+*.key
+*.cert
+*.cer
+
+# ===== Maven 构建产物 =====
+target/
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# ===== Java 编译文件 =====
+*.class
+
+# ===== IntelliJ IDEA =====
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ===== Eclipse / STS =====
+.settings/
+.project
+.classpath
+
+# ===== VS Code =====
+.vscode/
+
+# ===== 日志文件 =====
+logs/
+*.log
+
+# ===== 操作系统文件 =====
+.DS_Store
+Thumbs.db
